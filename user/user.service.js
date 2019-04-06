@@ -1,4 +1,4 @@
-﻿// const config = require("config.json");
+﻿const config = require("../config.json");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 // const db = require("_helpers/db");
@@ -17,23 +17,19 @@ module.exports = {
 };
 
 async function authenticate({ email, password }) {
-  User.findOne({
+  const user = await User.findOne({
     where: {
       email: email
     }
-  }).then(
-    user =>
-      function() {
-        if (user && bcrypt.compareSync(password, user.hash)) {
-          const { hash, ...userWithoutHash } = user.toObject();
-          const token = jwt.sign({ sub: user.id }, config.secret);
-          return {
-            ...userWithoutHash,
-            token
-          };
-        }
-      }
-  );
+  });
+  if (user && bcrypt.compareSync(password, user.hash)) {
+    delete user.dataValues.hash;
+    const token = jwt.sign({ sub: user.id }, config.secret);
+    return {
+      user,
+      token
+    };
+  }
 }
 
 // async function getAll() {

@@ -22,7 +22,7 @@ var Holiday = Models.Holiday;
 //   ------------------------- USER  -------------------------- //
 // <*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*> //
 
-router.get("/authenticate", function(req, res, next) {
+router.post("/authenticate", function(req, res, next) {
   userService
     .authenticate(req.body)
     .then(user =>
