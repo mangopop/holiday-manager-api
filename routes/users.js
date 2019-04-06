@@ -1,8 +1,10 @@
 var express = require("express");
 var router = express.Router();
-const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const userService = require("../user/user.service");
+const guard = require("express-jwt-permissions")({
+  permissionsProperty: "scope"
+});
 
 var Models = require("../sequelize");
 var User = Models.User;
@@ -18,11 +20,19 @@ var Holiday = Models.Holiday;
 // POST   user          /users/register
 // POST   user holiday  /users/:userId/holiday
 
+router.post("/authenticate", authenticate);
+router.post("/register", register);
+
+router.get("/:userId", guard.check("admin"), getById);
+router.put("/:userId", update);
+router.get("/", guard.check("NO"), findAll);
+router.delete("/delete", _delete);
+
 // <*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*> //
 //   ------------------------- USER  -------------------------- //
 // <*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*> //
 
-router.post("/authenticate", function(req, res, next) {
+function authenticate(req, res, next) {
   userService
     .authenticate(req.body)
     .then(user =>
@@ -31,10 +41,10 @@ router.post("/authenticate", function(req, res, next) {
         : res.status(400).json({ message: "Username or password is incorrect" })
     )
     .catch(err => next(err));
-});
+}
 
 // get user by id
-router.get("/:userId", function(req, res, next) {
+function getById(req, res, next) {
   User.findOne({
     where: {
       id: req.params.userId
@@ -42,10 +52,10 @@ router.get("/:userId", function(req, res, next) {
   }).then(user => {
     res.json(user);
   });
-});
+}
 
 // update user by id
-router.put("/:userId", function(req, res, next) {
+function update(req, res, next) {
   User.update(
     {
       lastName: req.body.lastName
@@ -58,18 +68,18 @@ router.put("/:userId", function(req, res, next) {
   ).then(user => {
     res.json(user);
   });
-});
+}
 
 // Find all users
-router.get("/", function(req, res, next) {
+function findAll(req, res, next) {
   User.findAll().then(users => {
     res.json(users);
   });
-});
+}
 
 // Create a new user
 // TODO: findOrCreate
-router.post("/register", function(req, res, next) {
+function register(req, res, next) {
   // check against email
   User.findAll({
     where: {
@@ -90,9 +100,9 @@ router.post("/register", function(req, res, next) {
       }
     }
   });
-});
+}
 
-router.delete("/", function(req, res, next) {
+function _delete(req, res, next) {
   User.destroy({
     where: {
       firstName: req.body.firstName
@@ -100,7 +110,7 @@ router.delete("/", function(req, res, next) {
   }).then(() => {
     console.log("Done");
   });
-});
+}
 
 // <*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*> //
 //   --------------------- USER - TEAM ------------------------ //

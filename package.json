@@ -19,7 +19,9 @@
     "jsonwebtoken": "^8.2.2",
     "rootpath": "^0.1.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "express-jwt-permissions": "^1.2.3"
+  },
   "main": "app.js",
   "author": "",
   "license": "ISC",

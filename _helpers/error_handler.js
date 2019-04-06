@@ -6,6 +6,10 @@ function errorHandler(err, req, res, next) {
     return res.status(400).json({ message: err });
   }
 
+  if (err.code === "permission_denied") {
+    res.status(403).send("Forbidden");
+  }
+
   if (err.name === "ValidationError") {
     // mongoose validation error
     return res.status(400).json({ message: err.message });

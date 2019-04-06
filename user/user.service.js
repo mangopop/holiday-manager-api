@@ -24,7 +24,15 @@ async function authenticate({ email, password }) {
   });
   if (user && bcrypt.compareSync(password, user.hash)) {
     delete user.dataValues.hash;
-    const token = jwt.sign({ sub: user.id }, config.secret);
+    const roles = await user.getRoles();
+    var scope = "";
+    if (roles.length) {
+      roles.forEach(element => {
+        scope = scope + element.name + " ";
+      });
+    }
+    scope = scope.trim();
+    const token = jwt.sign({ sub: user.id, scope: scope }, config.secret);
     return {
       user,
       token
