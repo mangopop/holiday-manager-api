@@ -8,9 +8,9 @@ var Models = require("../sequelize");
 var User = Models.User;
 
 module.exports = {
-  authenticate
+  authenticate,
+  getById
   //   getAll,
-  //   getById,
   //   create,
   //   update,
   //   delete: _delete
@@ -36,9 +36,13 @@ async function authenticate({ email, password }) {
 //   return await User.find().select("-hash");
 // }
 
-// async function getById(id) {
-//   return await User.findById(id).select("-hash");
-// }
+async function getById(id) {
+  return await User.findOne({
+    where: {
+      id: id
+    }
+  });
+}
 
 // async function create(userParam) {
 //   // validate

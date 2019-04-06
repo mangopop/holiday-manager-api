@@ -12,10 +12,10 @@ var Holiday = Models.Holiday;
 // GET    user          /users/:userId
 // GET    all users     /users
 // GET    users teams   /users/:teamId
-// GET    users holiday /users/holiday
+// GET    users holiday /users/:userId/holiday
 // DELETE user          /users/:userId
 // UPDATE user          /users/:userId
-// POST   user          /users/register ??
+// POST   user          /users/register
 // POST   user holiday  /users/:userId/holiday
 
 // <*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*> //
@@ -75,17 +75,17 @@ router.put("/:userId", function(req, res, next) {
 // Find all users
 router.get("/", function(req, res, next) {
   User.findAll().then(users => {
-    // console.log("All users:", JSON.stringify(users, null, 4));
     res.json(users);
   });
 });
 
 // Create a new user
+// TODO: findOrCreate
 router.post("/register", function(req, res, next) {
   // check against email
   User.findAll({
     where: {
-      email: req.params.email
+      email: req.body.email
     }
   }).then(users => {
     // create hash
