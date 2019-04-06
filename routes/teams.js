@@ -30,15 +30,9 @@ router.get("/:teamId", function(req, res, next) {
     where: {
       id: req.params.teamId
     }
-  })
-    .then(team => {
-      res.json(team);
-    })
-    .catch(err =>
-      res.status(400).json({
-        err: `team with id = [${req.params.teamId}] doesn\'t exist.${err}`
-      })
-    );
+  }).then(team => {
+    res.json(team);
+  });
 });
 
 // Create a new team
@@ -74,15 +68,9 @@ router.put("/:teamId", function(req, res, next) {
         id: req.params.teamId
       }
     }
-  )
-    .then(team => {
-      res.json(team);
-    })
-    .catch(err =>
-      res.status(400).json({
-        err: `team with id = [${req.params.teamId}] doesn\'t exist.${err}`
-      })
-    );
+  ).then(team => {
+    res.json(team);
+  });
 });
 
 // delete a team
