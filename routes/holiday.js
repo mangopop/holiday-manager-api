@@ -24,15 +24,9 @@ router.get("/:holidayId", function(req, res, next) {
     where: {
       id: req.params.holidayId
     }
-  })
-    .then(holiday => {
-      res.json(holiday);
-    })
-    .catch(err =>
-      res.status(400).json({
-        err: `holiday with id = [${req.params.holidayId}] doesn\'t exist.${err}`
-      })
-    );
+  }).then(holiday => {
+    res.json(holiday);
+  });
 });
 
 // Create a new Holiday

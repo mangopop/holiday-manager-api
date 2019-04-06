@@ -20,5 +20,3 @@ module.exports = (sequelize, type) => {
     }
   });
 };
-
-// TODO: validate

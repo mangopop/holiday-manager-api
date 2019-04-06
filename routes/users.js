@@ -39,15 +39,9 @@ router.get("/:userId", function(req, res, next) {
     where: {
       id: req.params.userId
     }
-  })
-    .then(user => {
-      res.json(user);
-    })
-    .catch(err =>
-      res.status(400).json({
-        err: `User with id = [${req.params.userId}] doesn\'t exist.${err}`
-      })
-    );
+  }).then(user => {
+    res.json(user);
+  });
 });
 
 // update user by id
@@ -61,15 +55,9 @@ router.put("/:userId", function(req, res, next) {
         id: req.params.userId
       }
     }
-  )
-    .then(user => {
-      res.json(user);
-    })
-    .catch(err =>
-      res.status(400).json({
-        err: `User with id = [${req.params.userId}] doesn\'t exist.${err}`
-      })
-    );
+  ).then(user => {
+    res.json(user);
+  });
 });
 
 // Find all users
@@ -125,25 +113,21 @@ router.get("/:userId/team", function(req, res, next) {
       id: req.params.userId
     },
     include: [{ model: Team }]
-  })
-    .then(response => {
-      // user.getTeams().then(response => {
-      res.json(response);
-      // });
-    })
-    .catch(err => res.status(400).json({ err: `no teams? ${err}` }));
+  }).then(response => {
+    // user.getTeams().then(response => {
+    res.json(response);
+    // });
+  });
 });
 
 // Find all users by team id
 router.get("/team/:teamId", function(req, res, next) {
   User.findAll({
     include: [{ model: Team, where: { name: req.params.teamId } }]
-  })
-    .then(users => {
-      console.log("All users:", JSON.stringify(users, null, 4));
-      res.json(users);
-    })
-    .catch(err => res.status(400).json({ err: `no teams? ${err}` }));
+  }).then(users => {
+    console.log("All users:", JSON.stringify(users, null, 4));
+    res.json(users);
+  });
 });
 
 // add a new team to user
@@ -159,19 +143,15 @@ router.post("/:userId/team/:teamId", function(req, res, next) {
         id: req.params.teamId
       }
     })
-  ])
-    .then(([user, team]) => {
-      // team
-      //   .hasUser(user)
-      //   .then(response => console.log(response))
-      //   .catch(err => res.status(400).json({ err: `what? ${err}` }));
-      user.addTeam(team).then(result => {
-        res.json(result);
-      });
-    })
-    .catch(err =>
-      res.status(400).json({ err: `Could not set the team ${err}` })
-    );
+  ]).then(([user, team]) => {
+    // team
+    //   .hasUser(user)
+    //   .then(response => console.log(response))
+    //   .catch(err => res.status(400).json({ err: `what? ${err}` }));
+    user.addTeam(team).then(result => {
+      res.json(result);
+    });
+  });
 });
 
 // <*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*> //
@@ -185,15 +165,9 @@ router.get("/:userId/holiday", function(req, res, next) {
       id: req.params.userId
     },
     include: [{ model: Holiday }]
-  })
-    .then(user => {
-      res.json(user);
-    })
-    .catch(err =>
-      res.status(400).json({
-        err: `User with id = [${req.params.userId}] doesn\'t exist.${err}`
-      })
-    );
+  }).then(user => {
+    res.json(user);
+  });
 });
 
 // create holiday on user
