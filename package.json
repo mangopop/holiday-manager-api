@@ -1,0 +1,27 @@
+{
+  "name": "sequelize-play",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "nodemon ./bin/www"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "express": "~4.16.0",
+    "morgan": "~1.9.0",
+    "mysql2": "^1.6.5",
+    "sequelize": "^5.2.8",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.4",
+    "express-jwt": "^5.3.1",
+    "jsonwebtoken": "^8.2.2",
+    "rootpath": "^0.1.2"
+  },
+  "devDependencies": {},
+  "main": "app.js",
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
