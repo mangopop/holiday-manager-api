@@ -10,23 +10,33 @@ var Models = require("../sequelize");
 var User = Models.User;
 var Team = Models.Team;
 var Holiday = Models.Holiday;
+var Role = Models.Role;
+
+// POST   user          /users/register
+// POST   authenticate  /authenticate
 
 // GET    user          /users/:userId
 // GET    all users     /users
 // GET    users teams   /users/:teamId
-// GET    users holiday /users/:userId/holiday
 // DELETE user          /users/:userId
 // UPDATE user          /users/:userId
-// POST   user          /users/register
+
+// GET    users holiday /users/:userId/holiday
 // POST   user holiday  /users/:userId/holiday
+
+// GET    user role     /users/:userId/role/
+// POST   user role     /users/:userId/role/:roleId
 
 router.post("/authenticate", authenticate);
 router.post("/register", register);
 
 router.get("/:userId", guard.check("admin"), getById);
-router.put("/:userId", update);
-router.get("/", guard.check("NO"), findAll);
-router.delete("/delete", _delete);
+router.put("/:userId", guard.check("admin"), update);
+router.get("/", guard.check("admin"), findAll);
+router.delete("/delete", guard.check("admin"), _delete);
+
+// router.get("/:userId/role", getRole);
+router.post("/:userId/role/:roleId", guard.check("admin"), addRole);
 
 // <*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*> //
 //   ------------------------- USER  -------------------------- //
@@ -45,11 +55,7 @@ function authenticate(req, res, next) {
 
 // get user by id
 function getById(req, res, next) {
-  User.findOne({
-    where: {
-      id: req.params.userId
-    }
-  }).then(user => {
+  userService.getById(req.params.userId).then(user => {
     res.json(user);
   });
 }
@@ -143,11 +149,7 @@ router.get("/team/:teamId", function(req, res, next) {
 // add a new team to user
 router.post("/:userId/team/:teamId", function(req, res, next) {
   Promise.all([
-    User.findOne({
-      where: {
-        id: req.params.userId
-      }
-    }),
+    userService.getById(req.params.userId),
     Team.findOne({
       where: {
         id: req.params.teamId
@@ -183,11 +185,7 @@ router.get("/:userId/holiday", function(req, res, next) {
 // create holiday on user
 router.post("/:userId/holiday", function(req, res, next) {
   Promise.all([
-    User.findOne({
-      where: {
-        id: req.params.userId
-      }
-    }),
+    userService.getById(req.params.userId),
     Holiday.create({ slot: req.body.slot, date: req.body.date })
   ]).then(([user, holiday]) => {
     // console.log(user);
@@ -197,5 +195,22 @@ router.post("/:userId/holiday", function(req, res, next) {
     });
   });
 });
+
+// <*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*> //
+//   ------------------- USER - role ----------------------- //
+// <*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*><*> //
+
+function addRole(req, res, next) {
+  Promise.all([
+    userService.getById(req.params.userId),
+    Role.findOne({
+      where: {
+        id: req.params.roleId
+      }
+    })
+  ]).then(([user, role]) => {
+    user.addRole(role).then(() => res.json(user));
+  });
+}
 
 module.exports = router;

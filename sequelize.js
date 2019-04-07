@@ -44,6 +44,9 @@ const seed = () => {
     Role.create({
       name: "admin"
     }),
+    Role.create({
+      name: "guest"
+    }),
     User.create({
       firstName: "Elliott",
       lastName: "Norton",
@@ -76,5 +79,6 @@ module.exports = {
   User,
   Holiday,
   Team,
-  Setting
+  Setting,
+  Role
 };
